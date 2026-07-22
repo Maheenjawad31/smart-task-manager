@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
 import Header from "@/app/components/header";
 import TaskForm from "@/app/components/TaskForm";
