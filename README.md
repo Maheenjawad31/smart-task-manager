@@ -4,6 +4,10 @@ A modern task management application built with Next.js, React, TypeScript, and 
 
 The app helps users organize daily tasks, track progress, and manage productivity with a clean and responsive interface.
 
+## 🌐 Live Demo
+
+[https://smart-task-manager-6t7pk6j10-maheen-projects.vercel.app](https://smart-task-manager-6t7pk6j10-maheen-projects.vercel.app)
+
 ## ✨ Features
 
 - ✅ Add new tasks
@@ -41,4 +45,3 @@ The app helps users organize daily tasks, track progress, and manage productivit
 - Git & GitHub
 
 ## 📂 Project Structure
-
