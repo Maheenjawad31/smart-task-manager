@@ -6,7 +6,7 @@ The app helps users organize daily tasks, track progress, and manage productivit
 
 ## 🌐 Live Demo
 
-[https://smart-task-manager-6t7pk6j10-maheen-projects.vercel.app](https://smart-task-manager-6t7pk6j10-maheen-projects.vercel.app)
+https://smart-task-manager-lovat-kappa.vercel.app/
 
 ## ✨ Features
 
