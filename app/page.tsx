@@ -1,104 +1,63 @@
-"use client";
 
-import { useState } from "react";
-import { useLocalStorage } from "@/app/hooks/useLocalStorage";
+import Link from "next/link";
 
-import Header from "@/app/components/header";
-import TaskForm from "@/app/components/TaskForm";
-import TaskList from "@/app/components/TaskList";
-import Stats from "@/app/components/Stats";
-import SearchBar from "@/app/components/SearchBar";
-import FilterTabs from "@/app/components/FilterTabs";
-
-import { Task } from "@/types/task";
+const dashboardCards = [
+  {
+    title: "Tasks",
+    description: "Manage your daily tasks and stay organized.",
+    href: "/tasks",
+  },
+  {
+    title: "Analytics",
+    description: "Track your productivity and task completion.",
+    href: "/analytics",
+  },
+  {
+    title: "AI Planner",
+    description: "Plan your work with AI-powered suggestions.",
+    href: "/ai-planner",
+  },
+  {
+    title: "Settings",
+    description: "Manage your application preferences.",
+    href: "/settings",
+  },
+  {
+    title: "Health",
+    description: "Check the application health status.",
+    href: "/health",
+  },
+];
 
 export default function Home() {
-  const [tasks, setTasks] = useLocalStorage<Task[]>("tasks", []);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
-
-  const addTask = (
-    title: string,
-    priority: "High" | "Medium" | "Low"
-  ) => {
-    const newTask: Task = {
-      id: Date.now(),
-      title,
-      priority,
-      completed: false,
-    };
-
-    setTasks((prev) => [...prev, newTask]);
-  };
-
-  const deleteTask = (id: number) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
-  };
-
-  const toggleTask = (id: number) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id
-          ? { ...task, completed: !task.completed }
-          : task
-      )
-    );
-  };
-
-  const editTask = (task: Task) => {
-    const newTitle = prompt("Edit task", task.title);
-
-    if (!newTitle || !newTitle.trim()) return;
-
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.id === task.id
-          ? { ...t, title: newTitle.trim() }
-          : t
-      )
-    );
-  };
-
-  const filteredTasks = tasks.filter((task) => {
-    const matchesSearch = task.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-
-    const matchesFilter =
-      filter === "all"
-        ? true
-        : filter === "active"
-        ? !task.completed
-        : task.completed;
-
-    return matchesSearch && matchesFilter;
-  });
-
   return (
     <main className="min-h-screen bg-slate-100">
-      <Header />
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <h1 className="text-4xl font-bold text-gray-900">
+          Dashboard
+        </h1>
 
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <TaskForm onAddTask={addTask} />
+        <p className="mt-3 text-lg text-gray-600">
+          Welcome to Smart Task Manager. Choose a section below to get started.
+        </p>
 
-        <Stats tasks={tasks} />
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {dashboardCards.map((card) => (
+            <Link
+              key={card.href}
+              href={card.href}
+              className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+            >
+              <h2 className="text-xl font-semibold text-gray-900">
+                {card.title}
+              </h2>
 
-        <SearchBar
-          search={search}
-          setSearch={setSearch}
-        />
-
-        <FilterTabs
-          filter={filter}
-          setFilter={setFilter}
-        />
-
-        <TaskList
-          tasks={filteredTasks}
-          onDelete={deleteTask}
-          onToggle={toggleTask}
-          onEdit={editTask}
-        />
+              <p className="mt-2 text-gray-600">
+                {card.description}
+              </p>
+            </Link>
+          ))}
+        </div>
       </div>
     </main>
   );
