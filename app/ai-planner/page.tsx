@@ -8,16 +8,23 @@ import remarkGfm from "remark-gfm";
 
 export default function AIPlannerPage() {
   const [input, setInput] = useState("");
+  const [lastMessage, setLastMessage] = useState("");
+  const [autoScroll, setAutoScroll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-
-  const [autoScroll, setAutoScroll] = useState(true);
 
   const { messages, sendMessage, status, stop } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
     }),
+    onError(error) {
+      console.error(error);
+      setErrorMessage(
+        "Something went wrong while contacting the AI. Please try again."
+      );
+    },
   });
 
   async function handleSubmit(
@@ -27,11 +34,24 @@ export default function AIPlannerPage() {
 
     if (!input.trim() || status !== "ready") return;
 
+    setErrorMessage("");
+    setLastMessage(input);
+
     await sendMessage({
       text: input,
     });
 
     setInput("");
+  }
+
+  async function retryMessage() {
+    if (!lastMessage || status !== "ready") return;
+
+    setErrorMessage("");
+
+    await sendMessage({
+      text: lastMessage,
+    });
   }
 
   useEffect(() => {
@@ -47,89 +67,91 @@ export default function AIPlannerPage() {
 
     if (!container) return;
 
-    const distanceFromBottom =
+    const distance =
       container.scrollHeight -
       container.scrollTop -
       container.clientHeight;
 
-    setAutoScroll(distanceFromBottom < 100);
+    setAutoScroll(distance < 100);
   }
 
   return (
     <main className="min-h-screen bg-slate-100">
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold">
           AI Planner
         </h1>
-
-        <p className="mt-2 text-gray-600">
-          Plan your work with AI-powered suggestions.
-        </p>
 
         <div className="mt-8 rounded-lg bg-white p-6 shadow">
           <div
             ref={messagesContainerRef}
             onScroll={handleScroll}
-            className="min-h-[300px] max-h-[500px] space-y-4 overflow-y-auto"
+            className="max-h-[500px] space-y-4 overflow-y-auto"
           >
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`rounded-lg p-4 ${
+                className={`flex gap-3 rounded-lg p-4 ${
                   message.role === "user"
-                    ? "bg-blue-100 text-right"
+                    ? "bg-blue-100"
                     : "bg-gray-100"
                 }`}
               >
-                <strong className="block">
-                  {message.role === "user"
-                    ? "You"
-                    : "AI"}
-                </strong>
+                <div className="text-2xl">
+                  {message.role === "user" ? "👤" : "🤖"}
+                </div>
 
-                {message.parts.map((part, index) => {
-  if (part.type !== "text") return null;
+                <div className="flex-1">
+                  <strong>
+                    {message.role === "user" ? "You" : "AI"}
+                  </strong>
 
-  return (
-    <div
-      key={index}
-      className="prose prose-sm max-w-none mt-2"
-    >
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-      >
-        {part.text}
-      </ReactMarkdown>
-    </div>
-  );
-})}
+                  {message.parts.map((part, index) => {
+                    if (part.type !== "text") return null;
+
+                    return (
+                      <div
+                        key={index}
+                        className="prose prose-sm mt-2 max-w-none"
+                      >
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            code({ children, className }) {
+                              return className ? (
+                                <pre className="my-3 overflow-x-auto rounded-lg bg-slate-900 p-4 text-sm text-white">
+                                  <code>{children}</code>
+                                </pre>
+                              ) : (
+                                <code className="rounded bg-slate-200 px-1 py-0.5 text-sm">
+                                  {children}
+                                </code>
+                              );
+                            },
+                          }}
+                        >
+                          {part.text}
+                        </ReactMarkdown>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             ))}
 
             {status === "submitted" && (
-              <div className="rounded-lg bg-gray-100 p-4">
-                <strong className="block">
-                  AI
-                </strong>
+              <div className="flex gap-3 rounded-lg bg-gray-100 p-4">
+                <div className="text-2xl">🤖</div>
 
-                <div className="mt-2 flex items-center gap-2">
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400"></span>
-                  <span
-                    className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-                    style={{
-                      animationDelay: "0.15s",
-                    }}
-                  ></span>
-                  <span
-                    className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-                    style={{
-                      animationDelay: "0.3s",
-                    }}
-                  ></span>
+                <div>
+                  <strong>AI</strong>
 
-                  <span className="ml-2 text-gray-500">
-                    Thinking...
-                  </span>
+                  <div className="mt-2 flex items-center gap-2 text-gray-500">
+                    <span>Thinking</span>
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
+                  </div>
                 </div>
               </div>
             )}
@@ -138,18 +160,28 @@ export default function AIPlannerPage() {
           </div>
 
           {!autoScroll && (
-            <div className="mt-3 flex justify-center">
-              <button
-                onClick={() => {
-                  bottomRef.current?.scrollIntoView({
-                    behavior: "smooth",
-                  });
+            <button
+              onClick={() => {
+                bottomRef.current?.scrollIntoView({
+                  behavior: "smooth",
+                });
+                setAutoScroll(true);
+              }}
+              className="mt-3 rounded-full bg-blue-600 px-4 py-2 text-sm text-white"
+            >
+              Jump to latest ↓
+            </button>
+          )}
 
-                  setAutoScroll(true);
-                }}
-                className="rounded-full bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+          {errorMessage && (
+            <div className="mt-4 rounded bg-red-100 p-3 text-red-700">
+              {errorMessage}
+
+              <button
+                onClick={retryMessage}
+                className="ml-3 rounded bg-red-600 px-3 py-1 text-white"
               >
-                Jump to latest ↓
+                Retry
               </button>
             </div>
           )}
@@ -160,18 +192,15 @@ export default function AIPlannerPage() {
           >
             <input
               value={input}
+              onChange={(e) => setInput(e.target.value)}
               disabled={status !== "ready"}
-              onChange={(e) =>
-                setInput(e.target.value)
-              }
-              placeholder="Ask the AI to help plan your tasks..."
-              className="flex-1 rounded border p-3 disabled:bg-gray-100 disabled:text-gray-500"
+              className="flex-1 rounded border p-3"
+              placeholder="Ask AI..."
             />
 
             <button
-              type="submit"
               disabled={status !== "ready"}
-              className="rounded bg-blue-600 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded bg-blue-600 px-4 text-white disabled:opacity-50"
             >
               Send
             </button>
@@ -180,7 +209,7 @@ export default function AIPlannerPage() {
               <button
                 type="button"
                 onClick={stop}
-                className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                className="rounded bg-red-600 px-4 text-white"
               >
                 Stop
               </button>
