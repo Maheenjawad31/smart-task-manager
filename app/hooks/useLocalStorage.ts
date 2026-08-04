@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
   const [value, setValue] = useState<T>(initialValue);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(key);
@@ -11,11 +12,18 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     if (stored) {
       setValue(JSON.parse(stored));
     }
+
+    setLoaded(true);
   }, [key]);
 
   useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(value));
-  }, [key, value]);
+    if (!loaded) return;
+
+    localStorage.setItem(
+      key,
+      JSON.stringify(value)
+    );
+  }, [key, value, loaded]);
 
   return [value, setValue] as const;
 }
