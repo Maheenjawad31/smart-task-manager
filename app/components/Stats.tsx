@@ -4,27 +4,64 @@ interface StatsProps {
   tasks: Task[];
 }
 
-export default function Stats({ tasks }: StatsProps) {
+export default function Stats({
+  tasks,
+}: StatsProps) {
+
   const total = tasks.length;
-  const completed = tasks.filter((task) => task.completed).length;
+
+  const completed = tasks.filter(
+    (task) => task.completed
+  ).length;
+
   const pending = total - completed;
 
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      <div className="bg-white rounded-xl shadow-md p-6 text-center">
-        <h3 className="text-gray-500 text-sm font-medium">Total Tasks</h3>
-        <p className="text-4xl font-bold text-blue-600 mt-2">{total}</p>
+    <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+
+
+      <div className="rounded-xl bg-white p-6 text-center shadow-md dark:bg-slate-900">
+
+        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          Total Tasks
+        </h3>
+
+        <p className="mt-2 text-4xl font-bold text-blue-600">
+          {total}
+        </p>
+
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 text-center">
-        <h3 className="text-gray-500 text-sm font-medium">Completed</h3>
-        <p className="text-4xl font-bold text-green-600 mt-2">{completed}</p>
+
+
+      <div className="rounded-xl bg-white p-6 text-center shadow-md dark:bg-slate-900">
+
+        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          Completed
+        </h3>
+
+        <p className="mt-2 text-4xl font-bold text-green-600">
+          {completed}
+        </p>
+
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 text-center">
-        <h3 className="text-gray-500 text-sm font-medium">Pending</h3>
-        <p className="text-4xl font-bold text-orange-500 mt-2">{pending}</p>
+
+
+      <div className="rounded-xl bg-white p-6 text-center shadow-md dark:bg-slate-900">
+
+        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+          Pending
+        </h3>
+
+        <p className="mt-2 text-4xl font-bold text-orange-500">
+          {pending}
+        </p>
+
       </div>
+
+
     </div>
   );
 }

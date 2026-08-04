@@ -15,17 +15,27 @@ export default function AIPlannerPage() {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const { messages, sendMessage, status, stop } = useChat({
+
+  const {
+    messages,
+    sendMessage,
+    status,
+    stop,
+  } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
     }),
+
     onError(error) {
       console.error(error);
+
       setErrorMessage(
         "Something went wrong while contacting the AI. Please try again."
       );
     },
   });
+
+
 
   async function handleSubmit(
     e: React.FormEvent<HTMLFormElement>
@@ -44,6 +54,8 @@ export default function AIPlannerPage() {
     setInput("");
   }
 
+
+
   async function retryMessage() {
     if (!lastMessage || status !== "ready") return;
 
@@ -54,6 +66,8 @@ export default function AIPlannerPage() {
     });
   }
 
+
+
   useEffect(() => {
     if (autoScroll) {
       bottomRef.current?.scrollIntoView({
@@ -62,8 +76,11 @@ export default function AIPlannerPage() {
     }
   }, [messages, status, autoScroll]);
 
+
+
   function handleScroll() {
-    const container = messagesContainerRef.current;
+    const container =
+      messagesContainerRef.current;
 
     if (!container) return;
 
@@ -75,107 +92,175 @@ export default function AIPlannerPage() {
     setAutoScroll(distance < 100);
   }
 
+
+
   return (
-    <main className="min-h-screen bg-slate-100">
+    <main className="min-h-screen bg-slate-100 dark:bg-slate-950">
+
       <div className="mx-auto max-w-3xl px-6 py-10">
-        <h1 className="text-3xl font-bold">
+
+
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           AI Planner
         </h1>
 
-        <div className="mt-8 rounded-lg bg-white p-6 shadow">
+
+        <p className="mt-2 text-gray-600 dark:text-gray-400">
+          AI-powered planning assistant for your tasks.
+        </p>
+
+
+
+        <div className="mt-8 rounded-lg bg-white p-6 shadow dark:bg-slate-900">
+
+
           <div
             ref={messagesContainerRef}
             onScroll={handleScroll}
             className="max-h-[500px] space-y-4 overflow-y-auto"
           >
+
+
             {messages.map((message) => (
+
               <div
                 key={message.id}
                 className={`flex gap-3 rounded-lg p-4 ${
                   message.role === "user"
-                    ? "bg-blue-100"
-                    : "bg-gray-100"
+                    ? "bg-blue-100 dark:bg-blue-950"
+                    : "bg-gray-100 dark:bg-slate-800"
                 }`}
               >
+
                 <div className="text-2xl">
-                  {message.role === "user" ? "👤" : "🤖"}
+                  {message.role === "user"
+                    ? "👤"
+                    : "🤖"}
                 </div>
+
+
 
                 <div className="flex-1">
-                  <strong>
-                    {message.role === "user" ? "You" : "AI"}
+
+                  <strong className="text-gray-900 dark:text-white">
+                    {message.role === "user"
+                      ? "You"
+                      : "AI"}
                   </strong>
 
-                  {message.parts.map((part, index) => {
-                    if (part.type !== "text") return null;
 
-                    return (
-                      <div
-                        key={index}
-                        className="prose prose-sm mt-2 max-w-none"
-                      >
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
-                          components={{
-                            code({ children, className }) {
-                              return className ? (
-                                <pre className="my-3 overflow-x-auto rounded-lg bg-slate-900 p-4 text-sm text-white">
-                                  <code>{children}</code>
-                                </pre>
-                              ) : (
-                                <code className="rounded bg-slate-200 px-1 py-0.5 text-sm">
-                                  {children}
-                                </code>
-                              );
-                            },
-                          }}
+
+                  {message.parts.map(
+                    (part, index) => {
+
+                      if (part.type !== "text")
+                        return null;
+
+
+                      return (
+                        <div
+                          key={index}
+                          className="prose prose-sm mt-2 max-w-none dark:prose-invert"
                         >
-                          {part.text}
-                        </ReactMarkdown>
-                      </div>
-                    );
-                  })}
+
+                          <ReactMarkdown
+                            remarkPlugins={[
+                              remarkGfm,
+                            ]}
+                          >
+                            {part.text}
+                          </ReactMarkdown>
+
+
+                        </div>
+                      );
+                    }
+                  )}
+
                 </div>
+
+
               </div>
+
             ))}
 
+
+
+
+
             {status === "submitted" && (
-              <div className="flex gap-3 rounded-lg bg-gray-100 p-4">
-                <div className="text-2xl">🤖</div>
+
+              <div className="flex gap-3 rounded-lg bg-gray-100 p-4 dark:bg-slate-800">
+
+                <div className="text-2xl">
+                  🤖
+                </div>
+
 
                 <div>
-                  <strong>AI</strong>
+
+                  <strong className="text-gray-900 dark:text-white">
+                    AI
+                  </strong>
+
 
                   <div className="mt-2 flex items-center gap-2 text-gray-500">
-                    <span>Thinking</span>
+
+                    <span>
+                      Thinking
+                    </span>
+
                     <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
                     <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
                     <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
+
                   </div>
+
                 </div>
+
               </div>
+
             )}
 
+
+
             <div ref={bottomRef} />
+
           </div>
 
+
+
+
+
           {!autoScroll && (
+
             <button
               onClick={() => {
                 bottomRef.current?.scrollIntoView({
                   behavior: "smooth",
                 });
+
                 setAutoScroll(true);
               }}
+
               className="mt-3 rounded-full bg-blue-600 px-4 py-2 text-sm text-white"
             >
               Jump to latest ↓
             </button>
+
           )}
 
+
+
+
+
+
           {errorMessage && (
-            <div className="mt-4 rounded bg-red-100 p-3 text-red-700">
+
+            <div className="mt-4 rounded bg-red-100 p-3 text-red-700 dark:bg-red-950 dark:text-red-300">
+
               {errorMessage}
+
 
               <button
                 onClick={retryMessage}
@@ -183,20 +268,39 @@ export default function AIPlannerPage() {
               >
                 Retry
               </button>
+
+
             </div>
+
           )}
+
+
+
+
+
 
           <form
             onSubmit={handleSubmit}
             className="mt-6 flex gap-2"
           >
+
             <input
+
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+
+              onChange={(e) =>
+                setInput(e.target.value)
+              }
+
               disabled={status !== "ready"}
-              className="flex-1 rounded border p-3"
+
+              className="flex-1 rounded border bg-white p-3 text-gray-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+
               placeholder="Ask AI..."
+
             />
+
+
 
             <button
               disabled={status !== "ready"}
@@ -205,7 +309,11 @@ export default function AIPlannerPage() {
               Send
             </button>
 
+
+
+
             {status === "streaming" && (
+
               <button
                 type="button"
                 onClick={stop}
@@ -213,10 +321,18 @@ export default function AIPlannerPage() {
               >
                 Stop
               </button>
+
             )}
+
+
           </form>
+
+
         </div>
+
+
       </div>
+
     </main>
   );
 }

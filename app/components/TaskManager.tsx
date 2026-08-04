@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 
-
 import TaskForm from "@/app/components/TaskForm";
 import TaskList from "@/app/components/TaskList";
 import Stats from "@/app/components/Stats";
@@ -15,7 +14,9 @@ import { Task } from "@/types/task";
 export default function TaskManager() {
   const [tasks, setTasks] = useLocalStorage<Task[]>("tasks", []);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
+  const [filter, setFilter] = useState<
+    "all" | "active" | "completed"
+  >("all");
 
   const addTask = (
     title: string,
@@ -32,28 +33,39 @@ export default function TaskManager() {
   };
 
   const deleteTask = (id: number) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
+    setTasks((prev) =>
+      prev.filter((task) => task.id !== id)
+    );
   };
 
   const toggleTask = (id: number) => {
     setTasks((prev) =>
       prev.map((task) =>
         task.id === id
-          ? { ...task, completed: !task.completed }
+          ? {
+              ...task,
+              completed: !task.completed,
+            }
           : task
       )
     );
   };
 
   const editTask = (task: Task) => {
-    const newTitle = prompt("Edit task", task.title);
+    const newTitle = prompt(
+      "Edit task",
+      task.title
+    );
 
     if (!newTitle || !newTitle.trim()) return;
 
     setTasks((prev) =>
       prev.map((t) =>
         t.id === task.id
-          ? { ...t, title: newTitle.trim() }
+          ? {
+              ...t,
+              title: newTitle.trim(),
+            }
           : t
       )
     );
@@ -75,13 +87,16 @@ export default function TaskManager() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-100">
-     
+    <main className="min-h-screen bg-slate-100 dark:bg-slate-950">
+      <div className="mx-auto max-w-6xl px-6 py-10">
 
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <TaskForm onAddTask={addTask} />
+        <TaskForm
+          onAddTask={addTask}
+        />
 
-        <Stats tasks={tasks} />
+        <Stats
+          tasks={tasks}
+        />
 
         <SearchBar
           search={search}
@@ -99,6 +114,7 @@ export default function TaskManager() {
           onToggle={toggleTask}
           onEdit={editTask}
         />
+
       </div>
     </main>
   );
