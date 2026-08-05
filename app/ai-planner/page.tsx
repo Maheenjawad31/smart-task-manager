@@ -297,38 +297,29 @@ export default function AIPlannerPage() {
 
 
 
-
-                        case "output-available":
-
-                          return (
-
-                            <ToolResultCard
-
-                              key={index}
-
-                              totalTasks={
-                                part.output.total
-                              }
-
-                              completedTasks={
-                                part.output.completed
-                              }
-
-                              pendingTasks={
-                                part.output.pending
-                              }
-
-                              highPriority={
-                                part.output.high
-                              }
-
-                              suggestion={
-                                part.output.recommendation
-                              }
-
-                            />
-
-                          );
+                          case "output-available": {
+                            const output = part.output as {
+                              total: number;
+                              completed: number;
+                              pending: number;
+                              high: number;
+                              medium: number;
+                              low: number;
+                              productivityScore: number;
+                              recommendation: string;
+                            };
+                          
+                            return (
+                              <ToolResultCard
+                                key={index}
+                                totalTasks={output.total}
+                                completedTasks={output.completed}
+                                pendingTasks={output.pending}
+                                highPriority={output.high}
+                                suggestion={output.recommendation}
+                              />
+                            );
+                          }
 
 
 
