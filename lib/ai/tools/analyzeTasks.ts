@@ -22,6 +22,7 @@ export const analyzeTasks = tool({
 
 
   execute: async ({ tasks }) => {
+ 
    
     const total = tasks.length;
 

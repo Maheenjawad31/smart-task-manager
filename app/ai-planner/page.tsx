@@ -35,27 +35,26 @@ export default function AIPlannerPage() {
     status,
     stop,
   } = useChat({
-
     transport: new DefaultChatTransport({
       api: "/api/chat",
     }),
-
-
+  
     sendAutomaticallyWhen:
       lastAssistantMessageIsCompleteWithToolCalls,
-
-
-    onError(error) {
-
+  
+    onError: (error) => {
       console.error(error);
-
+  
       setErrorMessage(
-        "Something went wrong while contacting the AI. Please try again."
+        "The AI request failed. You can retry your last message."
       );
-
     },
-
   });
+  
+ 
+
+
+
 
 
 
@@ -95,7 +94,7 @@ export default function AIPlannerPage() {
 
   async function retryMessage() {
 
-    if (!lastMessage || status !== "ready")
+    if (!lastMessage)
       return;
 
 
@@ -187,7 +186,26 @@ export default function AIPlannerPage() {
             className="max-h-[500px] space-y-4 overflow-y-auto"
           >
 
+{messages.length === 0 && (
+  <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center dark:border-slate-700">
+    <div className="text-5xl">🤖</div>
 
+    <h2 className="mt-4 text-xl font-semibold text-gray-900 dark:text-white">
+      No conversations yet
+    </h2>
+
+    <p className="mt-2 text-gray-600 dark:text-gray-400">
+      Try asking the AI about your tasks or productivity.
+    </p>
+
+    <button
+      onClick={() => setInput("Analyze my tasks")}
+      className="mt-6 rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+    >
+      Analyze my tasks
+    </button>
+  </div>
+)}
 
             {messages.map((message) => (
 
@@ -379,33 +397,31 @@ export default function AIPlannerPage() {
 
 
 
-            {status === "submitted" && (
+{status === "submitted" && (
 
-              <div className="flex gap-3 rounded-lg bg-gray-100 p-4 dark:bg-slate-800">
+<div className="flex gap-3 rounded-lg bg-gray-100 p-4 dark:bg-slate-800">
 
+  <div className="text-2xl">
+    🤖
+  </div>
 
-                <div className="text-2xl">
-                  🤖
-                </div>
+  <div className="flex-1">
 
+    <strong className="text-gray-900 dark:text-white">
+      AI
+    </strong>
 
-                <div>
+    <div className="mt-3 space-y-3 animate-pulse">
+      <div className="h-4 w-3/4 rounded bg-gray-300 dark:bg-slate-700" />
+      <div className="h-4 w-full rounded bg-gray-300 dark:bg-slate-700" />
+      <div className="h-4 w-2/3 rounded bg-gray-300 dark:bg-slate-700" />
+    </div>
 
-                  <strong className="text-gray-900 dark:text-white">
-                    AI
-                  </strong>
+  </div>
 
+</div>
 
-                  <div className="mt-2 text-gray-500">
-                    Thinking...
-                  </div>
-
-                </div>
-
-
-              </div>
-
-            )}
+)}
 
 
 
@@ -465,7 +481,7 @@ export default function AIPlannerPage() {
 
               >
 
-                Retry
+Retry last message
 
               </button>
 
@@ -497,7 +513,7 @@ export default function AIPlannerPage() {
                 setInput(e.target.value)
               }
 
-              disabled={status !== "ready"}
+              disabled={status === "streaming"}
 
               className="flex-1 rounded border bg-white p-3 text-gray-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
 
@@ -508,8 +524,7 @@ export default function AIPlannerPage() {
 
 
             <button
-
-              disabled={status !== "ready"}
+ disabled={status !== "ready"}
 
               className="rounded bg-blue-600 px-4 text-white disabled:opacity-50"
 
