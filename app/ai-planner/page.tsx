@@ -12,6 +12,7 @@ import remarkGfm from "remark-gfm";
 import { useLocalStorage } from "@/app/hooks/useLocalStorage";
 import { Task } from "@/types/task";
 import ToolResultCard from "@/app/components/ToolResultCard";
+import AnimatedButton from "@/app/components/AnimatedButton";
 
 
 export default function AIPlannerPage() {
@@ -523,16 +524,11 @@ Retry last message
 
 
 
-            <button
- disabled={status !== "ready"}
-
-              className="rounded bg-blue-600 px-4 text-white disabled:opacity-50"
-
-            >
-
-              Send
-
-            </button>
+<AnimatedButton
+  label="Send"
+  type="submit"
+  disabled={status !== "ready"}
+/>
 
 
 
