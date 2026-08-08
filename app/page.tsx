@@ -31,28 +31,24 @@ const dashboardCards = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-100 dark:bg-slate-950">
+    <main className="min-h-screen bg-gray-50 dark:bg-slate-950">
       <div className="mx-auto max-w-6xl px-6 py-10">
-
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
           Dashboard
         </h1>
 
-        <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
+        <p className="mt-3 text-lg text-gray-700 dark:text-gray-300">
           Welcome to Smart Task Manager. Choose a section below to get started.
         </p>
 
-
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
           {dashboardCards.map((card) => (
-
             <Link
               key={card.href}
               href={card.href}
+              prefetch={false}
               className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900"
             >
-
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                 {card.title}
               </h2>
@@ -60,13 +56,9 @@ export default function Home() {
               <p className="mt-2 text-gray-600 dark:text-gray-400">
                 {card.description}
               </p>
-
             </Link>
-
           ))}
-
         </div>
-
       </div>
     </main>
   );
