@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -50,7 +51,7 @@ export default function SettingsPage() {
   ).length;
 
   return (
-    <main>
+    <main className="min-h-screen bg-gray-50 dark:bg-slate-950">
       <div className="mx-auto max-w-5xl px-6 py-10">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Settings
@@ -85,7 +86,7 @@ export default function SettingsPage() {
               onChange={(e) =>
                 changeTheme(e.target.value)
               }
-              className="mt-2 w-full rounded-lg border border-gray-300 p-3 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+              className="mt-2 w-full rounded-lg border border-gray-300 bg-white p-3 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
             >
               <option value="light">
                 Light ☀️
@@ -111,7 +112,7 @@ export default function SettingsPage() {
               onChange={(e) =>
                 setPriority(e.target.value)
               }
-              className="mt-2 w-full rounded-lg border border-gray-300 p-3 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+              className="mt-2 w-full rounded-lg border border-gray-300 bg-white p-3 text-gray-900 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
             >
               <option value="High">
                 High
