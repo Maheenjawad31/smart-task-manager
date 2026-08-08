@@ -29,6 +29,8 @@ Smart Task Manager helps users organize tasks, track progress, manage productivi
 
 ---
 
+
+
 # AI Planner
 
 Smart Task Manager includes an AI productivity assistant.
@@ -54,6 +56,8 @@ AI features:
 - Mobile-friendly interface
 
 ---
+
+
 
 # FE-07 Tool Integration
 
@@ -98,6 +102,8 @@ The tool returns:
 
 ---
 
+
+
 # Tool UI States
 
 The AI tool lifecycle is displayed using different UI states.
@@ -112,6 +118,8 @@ Example:
 
 ---
 
+
+
 ## Input Available
 
 Shows that the user's task data has been received.
@@ -121,6 +129,8 @@ Example:
 "Task data received. Starting analysis."
 
 ---
+
+
 
 ## Output Available
 
@@ -135,13 +145,19 @@ The result shows:
 
 ---
 
+
+
 ## Output Error
 
 If the AI tool fails, the application displays a designed error state instead of crashing.
 
 ---
 
+
+
 # Tech Stack
+
+
 
 ## Frontend
 
@@ -150,6 +166,8 @@ If the AI tool fails, the application displays a designed error state instead of
 - TypeScript
 - Tailwind CSS
 
+
+
 ## AI
 
 - AI SDK
@@ -157,15 +175,21 @@ If the AI tool fails, the application displays a designed error state instead of
 - Zod schema validation
 - AI tool calling
 
+
+
 ## UI
 
 - React Markdown
 - Remark GFM
 - Recharts
 
+
+
 ## Storage
 
 - Browser Local Storage
+
+
 
 ## Deployment
 
@@ -173,6 +197,8 @@ If the AI tool fails, the application displays a designed error state instead of
 - GitHub
 
 ---
+
+
 
 # Project Structure
 
@@ -222,6 +248,8 @@ types/
 
 ---
 
+
+
 # Setup
 
 Install dependencies:
@@ -250,6 +278,8 @@ Open:
 
 ---
 
+
+
 # # Environment Variables
 
 Create a file:
@@ -271,6 +301,8 @@ OPENROUTER_API_KEY=your_openrouter_api_key
 Never commit `.env.local` or expose API keys publicly.
 
 ---
+
+
 
 # AI Tool Architecture
 
@@ -304,23 +336,75 @@ React displays the productivity report component
 
 ---
 
+
+
 # Future Improvements
 
 - User authentication
-
 - Database integration
-
 - Cloud task synchronization
-
 - Calendar integration
-
 - Advanced AI scheduling
-
 - More AI productivity tools
 
 ---
+
+
 
 # Author
 
 Built as part of the Frontend AI Engineering Internship.
 
+
+
+---
+
+# FE-AA2 — Your First 3D Experience on the Web
+
+Smart Task Manager includes an interactive 3D productivity experience built with React Three Fiber and Three.js.
+
+## 3D Experience
+
+Live page:
+
+[https://smart-task-manager-lovat-kappa.vercel.app/3d-experience](https://smart-task-manager-lovat-kappa.vercel.app/3d-experience)
+
+The experience includes:
+
+- Interactive 3D cube rendered in the browser
+
+- Click interaction to change the cube material color
+
+- Mouse/touch orbit controls
+
+- Pinch and scroll zoom support
+
+- Responsive canvas sizing for mobile devices
+
+- Reduced-motion fallback for accessibility
+
+- Loading fallback while the 3D scene initializes
+
+## Performance Notes
+
+The scene uses a small procedural cube instead of a large external 3D model, keeping the 3D content lightweight.
+
+Performance considerations include:
+
+- Device pixel ratio is capped to reduce GPU workload.
+
+- The canvas uses responsive sizing instead of a fixed full-screen render.
+
+- Orbit controls have limited zoom distance.
+
+- The scene uses simple geometry and lighting.
+
+- `Suspense` provides a loading fallback.
+
+- Users who prefer reduced motion receive a static fallback instead of the animated 3D canvas.
+
+## What I Would Add With More Time
+
+With more time, I would add a richer productivity desk scene, customizable 3D objects, additional materials, and more task-related interactions while keeping the experience optimized for mobile devices.
+
+---
